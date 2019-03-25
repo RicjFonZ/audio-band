@@ -1,10 +1,14 @@
 ﻿using System;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AudioBand.AudioSource;
 using AudioBand.Logging;
 using AudioBand.Models;
+using AudioBand.Resources;
 using AudioBand.Settings;
+using AudioBand.ViewModels;
+using AudioBand.Views.Wpf;
 using CSDeskBand;
 using SimpleInjector;
 
@@ -46,13 +50,40 @@ namespace AudioBand
 
         private void ConfigureDependencies()
         {
-            _container = new Container();
-            _container.Register<IAudioSourceManager, AudioSourceManager>();
-            _container.Register<IAppSettings, AppSettings>();
-            _container.RegisterInstance(Options);
-            _container.RegisterInstance(TaskbarInfo);
-            _container.Register<Track>();
-            _container.Verify();
+            try
+            {
+                _container = new Container();
+                _container.RegisterInstance(Options);
+                _container.RegisterInstance(TaskbarInfo);
+                _container.Register<Track>(Lifestyle.Singleton);
+                _container.Register<IAudioSourceManager, AudioSourceManager>(Lifestyle.Singleton);
+                _container.Register<IAppSettings, AppSettings>(Lifestyle.Singleton);
+                _container.Register<IResourceLoader, ResourceLoader>(Lifestyle.Singleton);
+                _container.Register<ICustomLabelService, CustomLabelService>(Lifestyle.Singleton);
+                _container.Register<IDialogService, DialogService>();
+                _container.Register<ISettingsWindow, SettingsWindow>();
+
+                var viewmodelExclude = new Type[] { typeof(AudioSourceSettingVM), typeof(AudioSourceSettingsVM) };
+                var viewmodels = typeof(ViewModelBase)
+                    .Assembly
+                    .GetTypes()
+                    .Where(type => type.Namespace == "AudioBand.ViewModels"
+                        && type.IsClass
+                        && !type.IsAbstract 
+                        && typeof(ViewModelBase).IsAssignableFrom(type)
+                        && !viewmodelExclude.Contains(type));
+                foreach (var viewmodel in viewmodels)
+                {
+                    _container.Register(viewmodel);
+                }
+
+                _container.Verify();
+            }
+            catch (Exception e)
+            {
+                AudioBandLogManager.GetLogger("AudioBand").Error(e);
+                throw;
+            }
         }
     }
 }

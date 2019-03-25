@@ -8,7 +8,7 @@ namespace AudioBand.ViewModels
     /// <summary>
     /// View model for the `about audioband` view.
     /// </summary>
-    public class AboutVM
+    public class AboutVM : ViewModelBase
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AboutVM"/> class.

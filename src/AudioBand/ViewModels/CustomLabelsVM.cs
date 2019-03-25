@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Windows;
 using AudioBand.Commands;
 using AudioBand.Models;
 using AudioBand.Settings;
@@ -36,7 +37,7 @@ namespace AudioBand.ViewModels
             }
 
             AddLabelCommand = new RelayCommand(AddLabelCommandOnExecute);
-            RemoveLabelCommand = new AsyncRelayCommand<CustomLabelVM>(RemoveLabelCommandOnExecute);
+            RemoveLabelCommand = new RelayCommand<CustomLabelVM>(RemoveLabelCommandOnExecute);
         }
 
         /// <summary>
@@ -52,8 +53,7 @@ namespace AudioBand.ViewModels
         /// <summary>
         /// Gets the command to remove a label.
         /// </summary>
-        /// <remarks>Async so its easier to show a dialog.</remarks>
-        public AsyncRelayCommand<CustomLabelVM> RemoveLabelCommand { get; }
+        public RelayCommand<CustomLabelVM> RemoveLabelCommand { get; }
 
         /// <summary>
         /// Gets or sets the dialog service used to show a dialog.
@@ -120,9 +120,9 @@ namespace AudioBand.ViewModels
             _added.Add(newLabel);
         }
 
-        private async Task RemoveLabelCommandOnExecute(CustomLabelVM labelVm)
+        private void RemoveLabelCommandOnExecute(CustomLabelVM labelVm)
         {
-            if (!await DialogService.ShowConfirmationDialogAsync("Delete Label", $"Are you sure you want to delete the label '{labelVm.Name}'?"))
+            if (!DialogService.ShowConfirmationDialog("Delete Label", $"Are you sure you want to delete the label '{labelVm.Name}'?"))
             {
                 return;
             }

@@ -125,6 +125,7 @@
     <Compile Include="Models\Track.cs" />
     <Compile Include="NativeMethods.cs" />
     <Compile Include="Resources\IResourceLoader.cs" />
+    <Compile Include="Resources\ResourceLoader.cs" />
     <Compile Include="Settings\IAppSettings.cs" />
     <Compile Include="Settings\Migrations\ISettingsMigrator.cs" />
     <Compile Include="Settings\Migrations\Migration.cs" />
@@ -154,9 +155,10 @@
     <Compile Include="ViewModels\AlbumArtPopupVM.cs" />
     <Compile Include="ViewModels\AlsoNotifyAttribute.cs" />
     <Compile Include="ViewModels\AudioSourceSettingVM.cs" />
+    <Compile Include="ViewModels\CustomLabelService.cs" />
     <Compile Include="ViewModels\CustomLabelsVM.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
-    <Compile Include="ViewModels\ICustomLabelHost.cs" />
+    <Compile Include="ViewModels\ICustomLabelService.cs" />
     <Compile Include="ViewModels\IDialogService.cs" />
     <Compile Include="ViewModels\PlayPauseButtonVM.cs" />
     <Compile Include="ViewModels\PreviousButtonVM.cs" />
@@ -212,6 +214,7 @@
       <DependentUpon>ImagePicker.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Wpf\Behaviours\NumericInput.cs" />
+    <Compile Include="Views\Wpf\ISettingsWindow.cs" />
     <Compile Include="Views\Wpf\PlaybackButtonSettingsView.xaml.cs">
       <DependentUpon>PlaybackButtonSettingsView.xaml</DependentUpon>
     </Compile>

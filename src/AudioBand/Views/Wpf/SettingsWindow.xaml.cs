@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Reflection;
+using System.Windows.Forms.Integration;
 using AudioBand.Commands;
 using AudioBand.ViewModels;
 
@@ -11,7 +13,7 @@ namespace AudioBand.Views.Wpf
     /// <summary>
     /// The code behind for the settings window.
     /// </summary>
-    internal partial class SettingsWindow
+    public partial class SettingsWindow : ISettingsWindow
     {
         private static readonly HashSet<string> _bindingHelpAssemblies = new HashSet<string>
         {
@@ -26,26 +28,42 @@ namespace AudioBand.Views.Wpf
         /// with the settings viewmodel.
         /// </summary>
         /// <param name="vm">The settings window viewmodel.</param>
-        internal SettingsWindow(SettingsWindowVM vm)
+        public SettingsWindow(
+            SettingsWindowVM vm,
+            AudioBandVM audioBandVM,
+            AlbumArtPopupVM albumArtPopupVM,
+            AlbumArtVM albumArtVM,
+            CustomLabelsVM customLabelsVM,
+            AboutVM aboutVm,
+            NextButtonVM nextButtonVM,
+            PlayPauseButtonVM playPauseButtonVM,
+            PreviousButtonVM previousButtonVM,
+            ProgressBarVM progressBarVM)
         {
             AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
+            ElementHost.EnableModelessKeyboardInterop(this);
 
             CancelCloseCommand = new RelayCommand(CancelCloseCommandOnExecute);
             SaveCloseCommand = new RelayCommand(SaveCloseCommandOnExecute);
 
+            AudioBandVM = audioBandVM;
+            AlbumArtPopupVM = albumArtPopupVM;
+            AlbumArtVM = albumArtVM;
+            CustomLabelsVM = customLabelsVM;
+            AboutVM = aboutVm;
+            NextButtonVM = nextButtonVM;
+            PlayPauseButtonVM = playPauseButtonVM;
+            PreviousButtonVM = previousButtonVM;
+            ProgressBarVM = progressBarVM;
+
             InitializeComponent();
             DataContext = vm;
-            vm.CustomLabelsVM.DialogService = new DialogService(this);
         }
 
-        /// <summary>
-        /// Occurs when settings are saved.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler Saved;
 
-        /// <summary>
-        /// Occurs when settings are canceled.
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler Canceled;
 
         /// <summary>
@@ -57,6 +75,33 @@ namespace AudioBand.Views.Wpf
         /// Gets the command to save changes and close.
         /// </summary>
         public RelayCommand SaveCloseCommand { get; }
+
+        public AudioBandVM AudioBandVM { get; private set; }
+
+        public AlbumArtPopupVM AlbumArtPopupVM { get; private set; }
+
+        public AlbumArtVM AlbumArtVM { get; private set; }
+
+        public CustomLabelsVM CustomLabelsVM { get; private set; }
+
+        public AboutVM AboutVm { get; private set; }
+
+        public NextButtonVM NextButtonVM { get; private set; }
+
+        public PlayPauseButtonVM PlayPauseButtonVM { get; private set; }
+
+        public PreviousButtonVM PreviousButtonVM { get; private set; }
+
+        public ProgressBarVM ProgressBarVM { get; private set; }
+
+        public AboutVM AboutVM { get; private set; }
+
+        public ObservableCollection<AudioSourceSettingsVM> AudioSourceSettingsVM => new ObservableCollection<AudioSourceSettingsVM>();
+
+        public void ShowWindow()
+        {
+            Show();
+        }
 
         /// <inheritdoc/>
         protected override void OnClosing(CancelEventArgs e)

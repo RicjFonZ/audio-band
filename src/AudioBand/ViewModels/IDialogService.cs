@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Windows;
+using System.Windows.Media;
 
 namespace AudioBand.ViewModels
 {
@@ -13,6 +14,13 @@ namespace AudioBand.ViewModels
         /// <param name="title">Title of the dialog.</param>
         /// <param name="message">Message of the dialog.</param>
         /// <returns>True if accepted; false otherwise.</returns>
-        Task<bool> ShowConfirmationDialogAsync(string title, string message);
+        bool ShowConfirmationDialog(string title, string message);
+
+        /// <summary>
+        /// Show the color picker dialog.
+        /// </summary>
+        /// <param name="initialColor">The initial color.</param>
+        /// <returns>The new color; otherwise the action was cancelled.</returns>
+        Color? ShowColorPickerDialog(Color initialColor);
     }
 }

@@ -33,11 +33,11 @@ namespace AudioBand.Views.Wpf
 
         private void ChangeColorOnClick(object sender, RoutedEventArgs e)
         {
-            var res = DialogService.ShowColorPickerDialog(Window.GetWindow(this), Color);
-            if (res.HasValue)
-            {
-                Color = res.Value;
-            }
+            //var res = DialogService.ShowColorPickerDialog(Window.GetWindow(this), Color);
+            //if (res.HasValue)
+            //{
+            //    Color = res.Value;
+            //}
         }
     }
 }
