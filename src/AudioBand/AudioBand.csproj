@@ -65,6 +65,9 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="SimpleInjector, Version=4.5.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\packages\SimpleInjector.4.5.1\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="Svg, Version=2.4.1.756, Culture=neutral, PublicKeyToken=12a0bac221edeae2, processorArchitecture=MSIL">
       <HintPath>..\packages\Svg.2.4.1\lib\Svg.dll</HintPath>
     </Reference>
@@ -93,6 +96,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioSource\AudioSourceProxy.cs" />
+    <Compile Include="AudioSource\IAudioSourceManager.cs" />
     <Compile Include="AudioSource\IInternalAudioSource.cs" />
     <Compile Include="Commands\AsyncRelayCommand.cs" />
     <Compile Include="Commands\RelayCommand.cs" />
@@ -120,6 +124,7 @@
     <Compile Include="Models\CustomLabel.cs" />
     <Compile Include="Models\Track.cs" />
     <Compile Include="NativeMethods.cs" />
+    <Compile Include="Settings\IAppSettings.cs" />
     <Compile Include="Settings\Migrations\ISettingsMigrator.cs" />
     <Compile Include="Settings\Migrations\Migration.cs" />
     <Compile Include="Settings\Migrations\V1ToV2.cs" />

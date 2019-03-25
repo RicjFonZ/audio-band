@@ -23,9 +23,9 @@ namespace AudioBand
     public partial class MainControl : AudioBandControl
     {
         private static readonly ILogger Logger = AudioBandLogManager.GetLogger("Audio Band");
-        private readonly AppSettings _appSettings = new AppSettings();
+        private readonly IAppSettings _appSettings;
+        private readonly IAudioSourceManager _audioSourceManager;
         private readonly Dispatcher _uiDispatcher;
-        private AudioSourceManager _audioSourceManager;
         private SettingsWindow _settingsWindow;
         private IAudioSource _currentAudioSource;
         private DeskBandMenuAction _settingsMenuItem;
@@ -54,13 +54,18 @@ namespace AudioBand
         /// </summary>
         /// <param name="options">The deskband options.</param>
         /// <param name="info">The taskbar info.</param>
-        public MainControl(CSDeskBandOptions options, TaskbarInfo info)
+        /// <param name="appsettings">The app settings</param>
+        /// <param name="audiosourceMananger">The audio source manager</param>
+        public MainControl(CSDeskBandOptions options, TaskbarInfo info, IAppSettings appsettings, IAudioSourceManager audiosourceMananger)
         {
             InitializeComponent();
 
             _uiDispatcher = Dispatcher.CurrentDispatcher;
             Options = options;
             TaskbarInfo = info;
+            _appSettings = appsettings;
+            _audioSourceManager = audiosourceMananger;
+
 #pragma warning disable CS4014
             InitializeAsync();
 #pragma warning restore CS4014
@@ -136,7 +141,6 @@ namespace AudioBand
                     ElementHost.EnableModelessKeyboardInterop(_settingsWindow);
                 });
 
-                _audioSourceManager = new AudioSourceManager();
                 _audioSourceManager.AudioSources.CollectionChanged += AudioSourcesOnCollectionChanged;
                 _audioSourceManager.LoadAudioSources();
 

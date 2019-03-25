@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using AudioBand.AudioSource;
 using AudioBand.Logging;
+using AudioBand.Settings;
 using CSDeskBand;
+using SimpleInjector;
 
 namespace AudioBand
 {
@@ -15,6 +18,7 @@ namespace AudioBand
     public class Deskband : CSDeskBandWin
     {
         private MainControl _mainControl;
+        private Container _container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Deskband"/> class.
@@ -23,7 +27,8 @@ namespace AudioBand
         {
             AudioBandLogManager.Initialize();
             AppDomain.CurrentDomain.UnhandledException += (sender, args) => AudioBandLogManager.GetLogger("AudioBand").Error((Exception)args.ExceptionObject, "Unhandled Exception");
-            _mainControl = new MainControl(Options, TaskbarInfo);
+            ConfigureDependencies();
+            _mainControl = _container.GetInstance<MainControl>();
         }
 
         /// <inheritdoc/>
@@ -35,6 +40,17 @@ namespace AudioBand
             base.DeskbandOnClosed();
             _mainControl.CloseAudioband();
             _mainControl.Hide();
+            _mainControl = null;
+        }
+
+        private void ConfigureDependencies()
+        {
+            _container = new Container();
+            _container.Register<IAudioSourceManager, AudioSourceManager>();
+            _container.Register<IAppSettings, AppSettings>();
+            _container.RegisterInstance(Options);
+            _container.RegisterInstance(TaskbarInfo);
+            _container.Verify();
         }
     }
 }
