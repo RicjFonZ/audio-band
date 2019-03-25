@@ -8,13 +8,13 @@ using AudioBand.Views.Winforms;
 namespace AudioBand
 {
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-    partial class MainControl : ICustomLabelHost
+    partial class MainControl : ICustomLabelService
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
     {
         private const string CustomLabelControlsKey = "CustomLabel";
 
         /// <inheritdoc/>
-        void ICustomLabelHost.AddCustomTextLabel(CustomLabelVM customLabel)
+        void ICustomLabelService.AddCustomTextLabel(CustomLabelVM customLabel)
         {
             if (InvokeRequired)
             {
@@ -27,7 +27,7 @@ namespace AudioBand
         }
 
         /// <inheritdoc/>
-        void ICustomLabelHost.RemoveCustomTextLabel(CustomLabelVM customLabel)
+        void ICustomLabelService.RemoveCustomTextLabel(CustomLabelVM customLabel)
         {
             if (InvokeRequired)
             {

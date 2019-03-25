@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using AudioBand.AudioSource;
 using AudioBand.Logging;
+using AudioBand.Models;
 using AudioBand.Settings;
 using CSDeskBand;
 using SimpleInjector;
@@ -50,6 +51,7 @@ namespace AudioBand
             _container.Register<IAppSettings, AppSettings>();
             _container.RegisterInstance(Options);
             _container.RegisterInstance(TaskbarInfo);
+            _container.Register<Track>();
             _container.Verify();
         }
     }

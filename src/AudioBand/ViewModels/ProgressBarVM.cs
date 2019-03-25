@@ -1,18 +1,24 @@
 ﻿using System;
 using System.Drawing;
 using AudioBand.Models;
+using AudioBand.Settings;
 
 namespace AudioBand.ViewModels
 {
     /// <summary>
     /// View model for the progress bar.
     /// </summary>
-    internal class ProgressBarVM : ViewModelBase<ProgressBar>
+    public class ProgressBarVM : ViewModelBase<ProgressBar>
     {
         private readonly Track _track;
 
-        public ProgressBarVM(ProgressBar model, Track track)
-            : base(model)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProgressBarVM"/> class.
+        /// </summary>
+        /// <param name="appsettings">The app settings</param>
+        /// <param name="track">The track model.</param>
+        public ProgressBarVM(IAppSettings appsettings, Track track)
+            : base(appsettings.ProgressBar)
         {
             _track = track;
             SetupModelBindings(_track);

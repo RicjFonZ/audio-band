@@ -4,34 +4,35 @@ using System.Linq;
 using System.Threading.Tasks;
 using AudioBand.Commands;
 using AudioBand.Models;
+using AudioBand.Settings;
 
 namespace AudioBand.ViewModels
 {
     /// <summary>
     /// Viewmodel for all the custom labels.
     /// </summary>
-    internal class CustomLabelsVM : ViewModelBase
+    public class CustomLabelsVM : ViewModelBase
     {
-        private readonly ICustomLabelHost _labelHost;
+        private readonly ICustomLabelService _labelService;
         private readonly HashSet<CustomLabelVM> _added = new HashSet<CustomLabelVM>();
         private readonly HashSet<CustomLabelVM> _removed = new HashSet<CustomLabelVM>();
-        private List<CustomLabel> _customLabels;
+        private readonly List<CustomLabel> _customLabels;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomLabelsVM"/> class
         /// with the list of custom labels and a label host.
         /// </summary>
-        /// <param name="customLabels">The custom labels.</param>
-        /// <param name="labelHost">The host for the labels.</param>
-        public CustomLabelsVM(List<CustomLabel> customLabels, ICustomLabelHost labelHost)
+        /// <param name="appsettings">The app setings.</param>
+        /// <param name="labelService">The host for the labels.</param>
+        public CustomLabelsVM(IAppSettings appsettings, ICustomLabelService labelService)
         {
-            _customLabels = customLabels;
-            CustomLabels = new ObservableCollection<CustomLabelVM>(customLabels.Select(customLabel => new CustomLabelVM(customLabel)));
-            _labelHost = labelHost;
+            _customLabels = appsettings.CustomLabels;
+            CustomLabels = new ObservableCollection<CustomLabelVM>(_customLabels.Select(customLabel => new CustomLabelVM(customLabel)));
+            _labelService = labelService;
 
             foreach (var customLabelVm in CustomLabels)
             {
-                _labelHost.AddCustomTextLabel(customLabelVm);
+                _labelService.AddCustomTextLabel(customLabelVm);
             }
 
             AddLabelCommand = new RelayCommand(AddLabelCommandOnExecute);
@@ -77,13 +78,13 @@ namespace AudioBand.ViewModels
             foreach (var label in _added)
             {
                 CustomLabels.Remove(label);
-                _labelHost.RemoveCustomTextLabel(label);
+                _labelService.RemoveCustomTextLabel(label);
             }
 
             foreach (var label in _removed)
             {
                 CustomLabels.Add(label);
-                _labelHost.AddCustomTextLabel(label);
+                _labelService.AddCustomTextLabel(label);
             }
 
             _added.Clear();
@@ -114,7 +115,7 @@ namespace AudioBand.ViewModels
         {
             var newLabel = new CustomLabelVM(new CustomLabel()) { Name = "New Label" };
             CustomLabels.Add(newLabel);
-            _labelHost.AddCustomTextLabel(newLabel);
+            _labelService.AddCustomTextLabel(newLabel);
 
             _added.Add(newLabel);
         }
@@ -127,7 +128,7 @@ namespace AudioBand.ViewModels
             }
 
             CustomLabels.Remove(labelVm);
-            _labelHost.RemoveCustomTextLabel(labelVm);
+            _labelService.RemoveCustomTextLabel(labelVm);
 
             // Only add to removed if not a new label
             if (!_added.Remove(labelVm))

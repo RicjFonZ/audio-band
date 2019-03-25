@@ -5,7 +5,7 @@ namespace AudioBand.ViewModels
     /// <summary>
     /// Provides functionality to show dialogs.
     /// </summary>
-    internal interface IDialogService
+    public interface IDialogService
     {
         /// <summary>
         /// Show a confirmation dialog.

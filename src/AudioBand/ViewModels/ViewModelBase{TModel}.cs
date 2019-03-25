@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using AudioBand.Models;
 using AutoMapper;
 using FastMember;
-using NLog;
 
 namespace AudioBand.ViewModels
 {
@@ -141,25 +138,6 @@ namespace AudioBand.ViewModels
 
             _backup = new TModel();
             _mapperConfiguration.CreateMapper().Map(Model, _backup);
-        }
-
-        /// <summary>
-        /// Try to load image from path or default image if invalid file.
-        /// </summary>
-        /// <param name="path">Path to load image from.</param>
-        /// <param name="defaultImage">Default image to use if unable to laod file.</param>
-        /// <returns>The loaded image or default image.</returns>
-        protected Image LoadImage(string path, Image defaultImage)
-        {
-            try
-            {
-                return string.IsNullOrEmpty(path) ? defaultImage : Image.FromFile(path);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, "Error loading image from {path}", path);
-                return defaultImage;
-            }
         }
 
         /// <summary>
