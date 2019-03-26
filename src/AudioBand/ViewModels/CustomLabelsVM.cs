@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Windows;
 using AudioBand.Commands;
 using AudioBand.Models;
 using AudioBand.Settings;
@@ -18,6 +16,7 @@ namespace AudioBand.ViewModels
         private readonly HashSet<CustomLabelVM> _added = new HashSet<CustomLabelVM>();
         private readonly HashSet<CustomLabelVM> _removed = new HashSet<CustomLabelVM>();
         private readonly List<CustomLabel> _customLabels;
+        private readonly IDialogService _dialogService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomLabelsVM"/> class
@@ -25,10 +24,12 @@ namespace AudioBand.ViewModels
         /// </summary>
         /// <param name="appsettings">The app setings.</param>
         /// <param name="labelService">The host for the labels.</param>
-        public CustomLabelsVM(IAppSettings appsettings, ICustomLabelService labelService)
+        /// <param name="dialogService">The dialog service</param>
+        public CustomLabelsVM(IAppSettings appsettings, ICustomLabelService labelService, IDialogService dialogService)
         {
+            _dialogService = dialogService;
             _customLabels = appsettings.CustomLabels;
-            CustomLabels = new ObservableCollection<CustomLabelVM>(_customLabels.Select(customLabel => new CustomLabelVM(customLabel)));
+            CustomLabels = new ObservableCollection<CustomLabelVM>(_customLabels.Select(customLabel => new CustomLabelVM(customLabel, dialogService)));
             _labelService = labelService;
 
             foreach (var customLabelVm in CustomLabels)
@@ -55,21 +56,11 @@ namespace AudioBand.ViewModels
         /// </summary>
         public RelayCommand<CustomLabelVM> RemoveLabelCommand { get; }
 
-        /// <summary>
-        /// Gets or sets the dialog service used to show a dialog.
-        /// </summary>
-        public IDialogService DialogService { get; set; }
-
         /// <inheritdoc/>
         protected override void OnBeginEdit()
         {
             _added.Clear();
             _removed.Clear();
-
-            foreach (var customLabelVm in CustomLabels)
-            {
-                customLabelVm.BeginEdit();
-            }
         }
 
         /// <inheritdoc/>
@@ -89,11 +80,6 @@ namespace AudioBand.ViewModels
 
             _added.Clear();
             _removed.Clear();
-
-            foreach (var customLabelVm in CustomLabels)
-            {
-                customLabelVm.CancelEdit();
-            }
         }
 
         /// <inheritdoc/>
@@ -106,14 +92,15 @@ namespace AudioBand.ViewModels
 
             foreach (var customLabelVm in CustomLabels)
             {
-                customLabelVm.EndEdit();
                 _customLabels.Add(customLabelVm.GetModel());
             }
         }
 
         private void AddLabelCommandOnExecute(object o)
         {
-            var newLabel = new CustomLabelVM(new CustomLabel()) { Name = "New Label" };
+            BeginEdit();
+
+            var newLabel = new CustomLabelVM(new CustomLabel(), _dialogService) { Name = "New Label" };
             CustomLabels.Add(newLabel);
             _labelService.AddCustomTextLabel(newLabel);
 
@@ -122,7 +109,9 @@ namespace AudioBand.ViewModels
 
         private void RemoveLabelCommandOnExecute(CustomLabelVM labelVm)
         {
-            if (!DialogService.ShowConfirmationDialog("Delete Label", $"Are you sure you want to delete the label '{labelVm.Name}'?"))
+            BeginEdit();
+
+            if (!_dialogService.ShowConfirmationDialog("Delete Label", $"Are you sure you want to delete the label '{labelVm.Name}'?"))
             {
                 return;
             }

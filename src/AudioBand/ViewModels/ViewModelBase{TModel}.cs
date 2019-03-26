@@ -65,7 +65,7 @@ namespace AudioBand.ViewModels
         }
 
         /// <summary>
-        /// Performs setup to recieve change notifications from <paramref name="model"/> .
+        /// Performs setup to recieve change notifications from <paramref name="model"/> and wire it to properties marked with <see cref="PropertyChangeBindingAttribute"/>.
         /// </summary>
         /// <param name="model">Model to subscribe to for <see cref="INotifyPropertyChanged.PropertyChanged"/>.</param>
         /// <typeparam name="T">The type of the model.</typeparam>
@@ -100,11 +100,6 @@ namespace AudioBand.ViewModels
         protected override void OnCancelEdit()
         {
             base.OnCancelEdit();
-            if (_backup == null)
-            {
-                Logger.Warn("Cancelling edit but backup is null. Begin edit wasn't called.");
-            }
-
             _mapperConfiguration.CreateMapper().Map(_backup, Model);
             _backup = null;
         }
@@ -115,11 +110,6 @@ namespace AudioBand.ViewModels
         protected override void OnEndEdit()
         {
             base.OnEndEdit();
-            if (_backup == null)
-            {
-                Logger.Warn("Ending edit but backup is null. Begin edit wasn't called.");
-            }
-
             _backup = null;
         }
 
@@ -129,13 +119,6 @@ namespace AudioBand.ViewModels
         protected override void OnBeginEdit()
         {
             base.OnBeginEdit();
-            if (_backup != null)
-            {
-                return;
-            }
-
-            Logger.Debug("Starting edit");
-
             _backup = new TModel();
             _mapperConfiguration.CreateMapper().Map(Model, _backup);
         }

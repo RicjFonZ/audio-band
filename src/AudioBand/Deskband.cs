@@ -60,16 +60,16 @@ namespace AudioBand
                 _container.Register<IAppSettings, AppSettings>(Lifestyle.Singleton);
                 _container.Register<IResourceLoader, ResourceLoader>(Lifestyle.Singleton);
                 _container.Register<ICustomLabelService, CustomLabelService>(Lifestyle.Singleton);
-                _container.Register<IDialogService, DialogService>();
-                _container.Register<ISettingsWindow, SettingsWindow>();
+                _container.Register<IDialogService, DialogService>(Lifestyle.Singleton);
+                _container.Register<ISettingsWindow, SettingsWindow>(Lifestyle.Transient);
 
-                var viewmodelExclude = new Type[] { typeof(AudioSourceSettingVM), typeof(AudioSourceSettingsVM) };
+                var viewmodelExclude = new Type[] { typeof(AudioSourceSettingVM), typeof(AudioSourceSettingsVM)};
                 var viewmodels = typeof(ViewModelBase)
                     .Assembly
                     .GetTypes()
                     .Where(type => type.Namespace == "AudioBand.ViewModels"
                         && type.IsClass
-                        && !type.IsAbstract 
+                        && !type.IsAbstract
                         && typeof(ViewModelBase).IsAssignableFrom(type)
                         && !viewmodelExclude.Contains(type));
                 foreach (var viewmodel in viewmodels)

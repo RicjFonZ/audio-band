@@ -13,7 +13,16 @@
         public object SelectedVM
         {
             get => _selectedVM;
-            set => SetProperty(ref _selectedVM, value);
+            set
+            {
+                SetProperty(ref _selectedVM, value);
+
+                // Start object editing when view model is selected. Maybe take another look in the future.
+                if (value is ViewModelBase vm && !vm.IsEditing)
+                {
+                    vm.BeginEdit();
+                }
+            }
         }
     }
 }

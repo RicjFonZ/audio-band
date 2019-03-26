@@ -16,7 +16,6 @@ using AudioBand.Views.Wpf;
 using CSDeskBand;
 using CSDeskBand.ContextMenu;
 using NLog;
-using SettingsWindow = AudioBand.Views.Wpf.SettingsWindow;
 using Size = System.Drawing.Size;
 
 namespace AudioBand
@@ -55,7 +54,7 @@ namespace AudioBand
             ISettingsWindow settingsWindow,
             ICustomLabelService labelService)
         {
-            InitializeComponent();
+            InitializeComponent(); System.Diagnostics.Debugger.Launch();
 
             _uiDispatcher = Dispatcher.CurrentDispatcher;
             Options = options;
@@ -128,6 +127,10 @@ namespace AudioBand
 
                 _labelService.CustomLabelAdded += LabelServiceOnAddCustomTextLabel;
                 _labelService.CustomLabelRemoved += LabelServiceOnRemoveCustomTextLabel;
+                foreach (var label in _labelService.Labels)
+                {
+                    LabelServiceOnAddCustomTextLabel(null, label);
+                }
 
                 await _uiDispatcher.InvokeAsync(() => InitializeBindingSources(
                     _settingsWindow.AlbumArtPopupVM,

@@ -65,6 +65,9 @@
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="PubSub, Version=3.0.0.0, Culture=neutral, PublicKeyToken=fe4ede83ff72b2e0, processorArchitecture=MSIL">
+      <HintPath>..\packages\PubSub.3.0.0\lib\netstandard2.0\PubSub.dll</HintPath>
+    </Reference>
     <Reference Include="SimpleInjector, Version=4.5.1.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.4.5.1\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
@@ -158,6 +161,7 @@
     <Compile Include="ViewModels\CustomLabelService.cs" />
     <Compile Include="ViewModels\CustomLabelsVM.cs" />
     <Compile Include="ViewModels\AboutVM.cs" />
+    <Compile Include="ViewModels\EditMessage.cs" />
     <Compile Include="ViewModels\ICustomLabelService.cs" />
     <Compile Include="ViewModels\IDialogService.cs" />
     <Compile Include="ViewModels\PlayPauseButtonVM.cs" />

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AudioBand.ViewModels
 {
@@ -16,6 +17,11 @@ namespace AudioBand.ViewModels
         /// Occurs when a custom label is removed.
         /// </summary>
         event EventHandler<CustomLabelVM> CustomLabelRemoved;
+
+        /// <summary>
+        /// Gets the labels;
+        /// </summary>
+        IEnumerable<CustomLabelVM> Labels { get; }
 
         /// <summary>
         /// Adds a new custom label.
